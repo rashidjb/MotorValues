@@ -1,63 +1,204 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Motor Values</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>Motor Values</title>
 
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=font1|font2|etc" type="text/css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js" ></script>
-	</head>
-	<body> 
-	<div class="container-fluid">
-		<p>Hello</p>
-  		<h1>WORLD!!</h1>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+        <!-- <link rel="stylesheet" href="//fonts.googleapis.com/css?family=font1|font2|etc" type="text/css"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.js" ></script>
+    </head>
+    <body>
+    <div class="container-fluid row">
 
-		<form class="form">
-			<labelfor="gearRatios">Gear Ratios:</label>
-			<div class="form-row" id="gearRatios">
-				<div id="listOfRatios" class="form-row">
+        <form class="col-2">
+            <div class="gearRatios">
+                <label >Gear Ratios:</label>
+                <div class="form-group">
+                    <div id="listOfRatios" class="form-group"></div>
+                    <div class="form-group" align="center">
+                        <button type="button" class="btn btn-danger col-5 mx-auto" onClick=removeGear()>-</button>
+                        <button type="button" class="btn btn-primary col-5 mx-auto" onClick=addGear(1)>+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Final Drive:</label>
+                <input class="form-control" id="finalDrive" value="4.1" />
+            </div>
+            <div class="form-group">
+                <label>Engine Redline:</label>
+                <input class="form-control" id="redLine" value="7400" />
+            </div>
+            <div class="form-group">
+                <label>Tire Size:</label>
+                <input class="form-control" id="tireSize" value="24.62" />
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="in" checked="checked"> inches
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="mm" > millimeters
+                    </label>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success" align="center" onClick=calculate()>Calculate</button>
+        </form>
 
-				</div>
-				<div id="gearButtons" class="row">
-					<div  id="removeGear" class="col">
-						<button type="button" class="btn btn-danger" onClick=removeGear()>-</button>
-					</div>
-					<div  id="addGear" class="col">
-						<button type="button" class="btn btn-primary" onClick=addGear(1)>+</button>
-					</div>
-				</div>
-			</div>
-		</form>
+        <div class="col-2">
+            <table class="table table-striped table-hover table-bordered table-sm">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Combined</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
 
-		<script type="text/javascript">
-			console.log("javascript works");
-			var numOfGears = 0
+                </tbody>
+            </table>
+        </div>
 
-			function addGear(addedGears){
-				for(i=1; i<=addedGears; i++){
-					node = document.createElement("div");
-					node.className += "col";
-					child = document.createElement("input");
-					child.className += "form-control";
-					child.placeholder = "Gear "+ (numOfGears+1);
-					node.appendChild(child);
-					document.getElementById("listOfRatios").appendChild(node);
-					numOfGears++;
-				}
-			}
+        <div class="col-6">
+            <canvas id="chartjs" width="160" height="100"></canvas>
+        </div>
 
-			function removeGear(){
-				lastGear = document.getElementById("listOfRatios").lastChild;
-				lastGear.remove();
-				numOfGears--;
-			}
-			addGear(6)
-			console.log("Number of Gears:"+numOfGears)
-		</script>
-	</div>
-	</body>
+
+        <script type="text/javascript">
+            var numOfGears = 0;
+            addGear(6);
+            function calculate(){
+                elm = document.getElementById("tableBody");
+                while (elm.hasChildNodes()) {
+                    elm.removeChild(elm.lastChild);
+                }
+
+                gearRatios = gearValues();
+                finalDrive = document.getElementById("finalDrive").value;
+                redLine = document.getElementById("redLine").value;
+                tireSize = document.getElementById("tireSize").value;
+                combinedRatio = []
+
+                for (i=0; i<gearRatios.length; i++){
+                    combinedRatio[i] = combine(gearRatios[i], finalDrive)
+                    tr = document.createElement("tr");
+                    tr.style = "height: 38px;"
+                    td = document.createElement("td");
+                    td.innerHTML = combinedRatio[i].toFixed(2);
+                    tr.appendChild(td);
+                    elm.appendChild(tr);
+                }
+
+                results = dataSet(combinedRatio, finalDrive, redLine, tireSize);
+                maxSpeed = results[1];
+                info = results[0];
+                speeds =[];
+                for(i=0; i<=maxSpeed; i=i+5){
+                    speeds.push(i);
+                }
+                new Chart(
+                    document.getElementById("chartjs"),{
+                        "type":"line",
+                        "data":{
+                            "labels":speeds,
+                            "datasets": genDataSet(info),
+                        },
+                        "options":{}
+                    });
+            }
+
+            function genDataSet(data){
+                dataset = [];
+                object = {};
+                for(i=0; i<data.length; i++){
+                    color = getRandomColor();
+                    object = {
+                        "label":"Gear "+(i+1)+" Ratio",
+                        "data": data[i],
+                        "fill":"+1",
+                        "backgroundColor":"rgba("+color[0]+", "+color[1]+", "+color[2]+", 0.3)",
+                        "borderColor":"rgb("+color[0]+", "+color[1]+", "+color[2]+")",
+                        "lineTension":0.1,
+                    }
+                    dataset[i] = object;
+                }
+                return dataset;
+            }
+
+            function getRandomColor() {
+                var color = [];
+                for (var i = 0; i < 3; i++ ) {
+                    color[i] = Math.floor(Math.random() * 255);
+                }
+                console.log(color);
+                return color;
+            }
+
+            function dataSet(cr, fd, rl, ts){
+                data = [];
+                maxSpeed = 0;
+                for (i=0; i<cr.length; i++){
+                    y = 0;
+                    rpm = 0;
+                    speed = 0;
+                    data[i] = [];
+                    while(rpm < rl){
+                        rpm = (speed*cr[i])/(60*toDistance(ts));
+                        if(rpm< rl){
+                            data[i][y] = rpm;
+                        }
+                        if(speed>maxSpeed){
+                            maxSpeed = speed;
+                        }
+                        speed = speed + 5;
+                        y++;
+                    }
+                }
+                return [data, maxSpeed];
+            }
+
+            function gearValues(){
+                var gears = []
+                for(i=0; i<numOfGears; i++){
+                    gears[i]=document.getElementById("listOfRatios").childNodes[i].value;
+                }
+                return(gears);
+            }
+
+            function addGear(addedGears){
+                for(i=1; i<=addedGears; i++){
+                    child = document.createElement("input");
+                    child.className += "form-control";
+                    child.placeholder = "Gear "+ (numOfGears+1);
+                    child.value = 25;
+                    document.getElementById("listOfRatios").appendChild(child);
+                    numOfGears++;
+                }
+            }
+
+            function removeGear(){
+                lastGear = document.getElementById("listOfRatios").lastChild;
+                lastGear.remove();
+                numOfGears--;
+            }
+
+            function combine(gr, fd){
+                return gr*fd;
+            }
+
+            function toDistance(dia){
+                inches = document.getElementById("in").checked
+                if(inches){
+                    dia = dia*0.0000254
+                }
+                return dia*Math.PI
+            }
+
+        </script>
+    </div>
+    </body>
 </html>
